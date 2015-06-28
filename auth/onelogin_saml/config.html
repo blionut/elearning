@@ -1,0 +1,151 @@
+<?php
+/* * * * * * * * * *  The OneLogin SAML authentication module for Moodle  * * * * * * * * *
+ * 
+ * config.html - code for reconfiguring this module from within the Admin's GUI
+ * 
+ * @originalauthor OneLogin, Inc
+ * @author Harrison Horowitz
+ * @version 1.0
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package auth/onelogin_saml
+ * @copyright 2011 OneLogin.com
+ * 
+ * @description 
+ * Connects to Moodle, builds the configuration, discovers SAML status, and handles the login process accordingly.
+ * 
+ * Security Assertion Markup Language (SAML) is a standard for logging users into applications based 
+ * on their session in another context. This has significant advantages over logging in using a 
+ * username/password: no need to type in credentials, no need to remember and renew password, no weak 
+ * passwords etc.
+ * 
+ * Most companies already know the identity of users because they are logged into their Active Directory 
+ * domain or intranet. It is natural to use this information to log users into other applications as well 
+ * such as web-based application, and one of the more elegant ways of doing this by using SAML.
+ * 
+ * SAML is very powerful and flexible, but the specification can be quite a handful. Now OneLogin is 
+ * releasing this SAML toolkit for your Moodle application to enable you to integrate SAML in seconds 
+ * instead of months. We’ve filtered the signal from the noise and come up with a simple setup that will 
+ * work for most applications out there.
+ * 
+ */
+
+    global $CFG;
+
+    // Set to defaults if undefined
+    if (!isset($config->username)) {
+        $config->username = 'emailAddress';
+    }
+    //if (!isset ($config->duallogin)) {
+    //    $config->duallogin = '';
+    //}
+    //if (!isset ($config->notshowusername)) {
+    //    $config->notshowusername = '';
+    //}
+	if (!isset($config->x509certificate)) {
+		$config->x509certificate = '';
+	}
+	if (!isset($config->idp_sso_target_url)) {
+		$config->idp_sso_target_url = '';
+	}
+	if (!isset($config->idp_sso_issuer_url)) {
+		$config->idp_sso_issuer_url = '';
+	}
+	if (!isset($config->auto_create_users)) {
+		$config->auto_create_users = '';
+	}
+?>
+<table cellspacing="0" cellpadding="5" border="0">
+<?php if (1 == 0) { ?>
+<tr valign="top" class="required">
+<td colspan="3">
+   <?php
+   if (isset($err['samllib'])) {
+      formerr($err['samllib']);
+      echo '<br/>';
+   }
+   if (isset($err['samlconfig'])) {
+      formerr($err['samlconfig']);
+      echo '<br/>';
+   }
+   ?>
+</td>
+</tr>
+<?php } ?>
+
+<tr valign="top" class="required">
+    <td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_idp_sso_target_url", "auth_onelogin_saml"); ?>:</td>
+    <td>
+        <input name="idp_sso_target_url" type="text" value="<?php if ($config->idp_sso_target_url) echo $config->idp_sso_target_url; ?>" style="color:blue; width:300px; " />
+    </td>
+    <td style="font-size:10px;"><?php print_string("auth_onelogin_saml_idp_sso_target_url_description", "auth_onelogin_saml"); ?></td>
+</tr>
+<tr valign="top" class="required">
+    <td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_idp_sso_issuer_url", "auth_onelogin_saml"); ?>:</td>
+    <td>
+        <input name="idp_sso_issuer_url" type="text" value="<?php if ($config->idp_sso_issuer_url) echo $config->idp_sso_issuer_url; ?>" style="color:blue; width:300px; " />
+    </td>
+    <td style="font-size:10px;"><?php print_string("auth_onelogin_saml_idp_sso_issuer_url_description", "auth_onelogin_saml"); ?></td>
+</tr>
+	<?php if (1 == 0) { ?>
+<tr valign="top" class="required">
+    <td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_username", "auth_onelogin_saml"); ?>:</td>
+    <td>
+        <input name="username" type="text" size="30" value="<?php echo $config->username; ?>" style="color:#663366; font-weight:bold;" disabled />
+    </td>
+    <td style="font-size:10px;"><?php print_string("auth_onelogin_saml_username_description", "auth_onelogin_saml"); ?></td>
+</tr>
+		<tr valign="top">
+			<td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_duallogin", "auth_onelogin_saml"); ?>:</td>
+			<td>
+				<input name="duallogin" type="checkbox" <?php if ($config->duallogin) echo "checked"; ?> />
+			</td>
+			<td style="font-size:10px;"><?php print_string("auth_onelogin_saml_duallogin_description", "auth_onelogin_saml"); ?></td>
+		</tr>
+		<tr valign="top">
+			<td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_notshowusername", "auth_onelogin_saml"); ?>:</td>
+			<td>
+				<input name="notshowusername" type="checkbox" <?php if ($config->notshowusername) echo "checked"; ?> />
+			</td>
+			<td style="font-size:10px;"><?php print_string("auth_onelogin_saml_notshowusername_description", "auth_onelogin_saml"); ?></td>
+		</tr>
+	<?php } ?>
+<tr valign="top">
+    <td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_auto_create_users", "auth_onelogin_saml"); ?>:</td>
+    <td>
+        <input name="auto_create_users" type="checkbox" <?php if ($config->auto_create_users) echo "checked"; ?> />
+    </td>
+    <td style="font-size:10px;"><?php print_string("auth_onelogin_saml_auto_create_users_description", "auth_onelogin_saml"); ?></td>
+</tr>
+
+<tr valign="top" class="required">
+    <td align="right" style="font-size:12px; font-weight:bold;"><?php print_string("auth_onelogin_saml_x509certificate", "auth_onelogin_saml"); ?>:</td>
+    <td colspan="2" style="font-size:10px;"><?php print_string("auth_onelogin_saml_x509certificate_description", "auth_onelogin_saml"); ?><br />
+        <textarea rows="13" cols="100" name="x509certificate" style="font-size:8px; font:Verdana; width:95%;"><?php if ($config->x509certificate) echo $config->x509certificate; ?></textarea>
+    </td>
+</tr>
+
+
+
+
+	<?php if (1 == 0) { ?>
+		<tr>
+		   <td colspan="2">
+				<h4><?php print_string('coursecreators') ?> </h4>
+		   </td>
+		</tr>
+		<tr valign="top" class="required">
+				<td align="right"><label for="memberattribute"><?php print_string('auth_onelogin_saml_memberattribute','auth_onelogin_saml') ?></label></td>
+				<td>
+			<input name="memberattribute" id="memberattribute" type="text" size="30" value="<?php echo $config->memberattribute; ?>" />
+			<?php  if (isset($err['memberattribute'])) formerr($err['memberattribute']); ?>
+			</td><td style="font-size:10px;">
+			<?php print_string('auth_onelogin_saml_memberattribute_description','auth_onelogin_saml') ?>
+			</td>
+		</tr>
+	<?php } ?>
+<?php
+
+	//print_auth_lock_options('onelogin_saml', $user_fields, '<!-- empty help -->', true, false);
+
+?>
+</table>
