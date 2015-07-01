@@ -53,9 +53,9 @@ require_once($OUTPUT->get_include_file('pagesettings'));
 <header role="banner">
 
     <div id="page-header" class="clearfix<?php echo ($oldnavbar) ? ' oldnavbar' : ''; ?>">
-        <div class="container-fluid">
+       <!-- <div class="container-fluid">
             <div class="row-fluid">
-                <!-- HEADER: LOGO AREA -->
+          
                 <div class="<?php echo $logoclass;
                 echo (!$left) ? ' pull-right' : ' pull-left'; ?>">
                     <?php if (!$haslogo) { ?>
@@ -121,7 +121,7 @@ require_once($OUTPUT->get_include_file('pagesettings'));
                 </div>
             <?php } ?>
             </div>
-        </div>
+        </div>-->
     </div>
     <nav role="navigation">
         <div id='essentialnavbar' class="navbar<?php echo ($oldnavbar) ? ' oldnavbar' : ''; ?> moodle-has-zindex">
@@ -134,7 +134,8 @@ require_once($OUTPUT->get_include_file('pagesettings'));
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </a>
-                        <?php echo $OUTPUT->get_title('navbar'); ?>
+                        <?php //echo $OUTPUT->get_title('navbar'); ?>
+						<logo><a title="The Leader In Me Online" href="/"><span>The Leader In Me</span> Online</a></logo>
                     <div class="pull-<?php echo ($left) ? 'right' : 'left'; ?>">
                         <div class="usermenu">
                             <?php echo $OUTPUT->custom_menu_user(); ?>
